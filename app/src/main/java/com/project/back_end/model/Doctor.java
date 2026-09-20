@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "doctor")
@@ -16,6 +17,13 @@ public class Doctor {
     @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false)
     private String name;
+    
+    @Column(nullable = true, unique = true)
+    private String email;
+    
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = true)
+    private String password;
 
     @NotBlank(message = "Specialty cannot be blank")
     @Column(nullable = false)
@@ -35,6 +43,12 @@ public class Doctor {
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public String getSpecialty() { return specialty; }
     public void setSpecialty(String specialty) { this.specialty = specialty; }
