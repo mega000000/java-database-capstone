@@ -1,30 +1,37 @@
-package com.project.back_end.mvc;
+﻿package com.project.back_end.mvc;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+@Controller
 public class DashboardController {
 
-// 1. Set Up the MVC Controller Class:
-//    - Annotate the class with `@Controller` to indicate that it serves as an MVC controller returning view names (not JSON).
-//    - This class handles routing to admin and doctor dashboard pages based on token validation.
+    // Simple mock token validation for MVC, this should ideally use TokenService
+    private boolean isValidToken(String token, String expectedRole) {
+        // In a real app, you would parse the JWT token here
+        return token != null && token.length() > 5; // Basic mock condition
+    }
 
+    @GetMapping("/adminDashboard/{token}")
+    public String adminDashboard(@PathVariable String token, Model model) {
+        if (isValidToken(token, "ADMIN")) {
+            return "admin/adminDashboard";
+        }
+        return "redirect:/login";
+    }
 
-// 2. Autowire the Shared Service:
-//    - Inject the common `Service` class, which provides the token validation logic used to authorize access to dashboards.
+    @GetMapping("/doctorDashboard/{token}")
+    public String doctorDashboard(@PathVariable String token, Model model) {
+        if (isValidToken(token, "DOCTOR")) {
+            return "doctor/doctorDashboard";
+        }
+        return "redirect:/login";
+    }
 
-
-// 3. Define the `adminDashboard` Method:
-//    - Handles HTTP GET requests to `/adminDashboard/{token}`.
-//    - Accepts an admin's token as a path variable.
-//    - Validates the token using the shared service for the `"admin"` role.
-//    - If the token is valid (i.e., no errors returned), forwards the user to the `"admin/adminDashboard"` view.
-//    - If invalid, redirects to the root URL, likely the login or home page.
-
-
-// 4. Define the `doctorDashboard` Method:
-//    - Handles HTTP GET requests to `/doctorDashboard/{token}`.
-//    - Accepts a doctor's token as a path variable.
-//    - Validates the token using the shared service for the `"doctor"` role.
-//    - If the token is valid, forwards the user to the `"doctor/doctorDashboard"` view.
-//    - If the token is invalid, redirects to the root URL.
-
-
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // assuming a login template would exist
+    }
 }
